@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#03213f" />
+  <title>Happy Birthday Sheetal 🐠</title>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FONTS  (self-host swap: replace these <link> tags + font-family
+       names in css/style.css if you ever go offline)
+       ══════════════════════════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- ══════════════════════════════════════════════════════════════
+       LIBRARIES VIA CDN
+       GSAP — animations | Matter.js — bow & arrow physics |
+       canvas-confetti — finale | Swiper — memory carousel
+       ══════════════════════════════════════════════════════════════ -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Soft ocean-wipe overlay used for every scene transition -->
+  <div id="wipe" aria-hidden="true"><div class="wipe-wave"></div></div>
+
+  <main id="scenes">
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 1 — LANDING  (flowers fly in + PIN lock)
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene is-active" id="scene-1" data-scene="1">
+      <div class="flower-field" id="flowerField" aria-hidden="true"></div>
+      <div class="lock-card glass" id="lockCard">
+        <div class="lock-emoji" aria-hidden="true">🧁</div>
+        <h1 class="lock-question">Kitne cupcakes the?</h1>
+        <!-- ✏️ SWAP TEXT: change the question above if you re-use this site -->
+        <input id="pinInput" class="pin-input" type="text" inputmode="numeric" autocomplete="off"
+               maxlength="4" placeholder="••••" aria-label="Your answer" />
+        <p class="lock-hint" id="lockHint">psst… you know the number 😌</p>
+      </div>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 2 — GIFT BOX
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-2" data-scene="2">
+      <div class="scene-center">
+        <div class="gift-stage" id="giftStage">
+          <div class="gift" id="gift">
+            <div class="gift-lid" id="giftLid"><div class="ribbon-v"></div></div>
+            <div class="gift-box"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+            <div class="gift-glow" id="giftGlow"></div>
+          </div>
+        </div>
+        <button class="btn pill" id="unwrapBtn">Unwrap 🎀</button>
+        <p class="tap-hint" id="giftHint">a little something for you…</p>
+      </div>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 3 — BOW & ARROW (Matter.js)  → "Happy Birthday Sheetal"
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-3" data-scene="3">
+      <canvas id="bowCanvas"></canvas>
+      <p class="bow-instruction" id="bowInstruction">Pull back anywhere to draw the bow — release to fire at the heart 💘</p>
+      <div class="big-reveal" id="bigReveal" aria-hidden="true">
+        <h2 class="script reveal-text">Happy Birthday<br /><span class="accent-pink">Sheetal</span></h2>
+      </div>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 4 — GROWING TREE (heart leaves)
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-4" data-scene="4">
+      <div class="tree-stage">
+        <svg id="treeSvg" viewBox="0 0 480 520" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+          <g id="treeTrunk" fill="none" stroke-linecap="round">
+            <path id="trunkPath" d="M240 512 C 236 400 244 340 238 280 C 232 220 226 170 212 118" />
+            <path class="branch" d="M238 360 C 275 322 320 305 372 296" />
+            <path class="branch" d="M240 318 C 200 282 158 268 106 262" />
+            <path class="branch" d="M236 250 C 272 226 306 216 348 212" />
+            <path class="branch" d="M234 224 C 200 196 168 186 126 180" />
+            <path class="branch" d="M218 150 C 205 124 190 110 168 96" />
+            <path class="branch" d="M228 190 C 250 172 272 164 300 160" />
+            <path class="branch" d="M232 275 C 258 258 280 252 310 248" />
+            <path class="branch" d="M236 330 C 214 312 196 306 172 300" />
+          </g>
+          <g id="treeHearts"></g>
+        </svg>
+        <div class="ground"></div>
+      </div>
+      <p class="tree-text" id="treeText">Happy Birthdayyyyy! Wish you many many happy returns of the day! Have an amazinggggg year ahead</p>
+      <button class="btn pill continue-btn hidden" id="treeContinue">continue →</button>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 5 — CAKE BUILD + CANDLE BLOW-OUT
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-5" data-scene="5">
+      <div class="scene-center">
+        <p class="cake-topline" id="cakeTopline">First things first 🍰</p>
+        <div class="cake-stage" id="cakeStage">
+          <!-- cake built programmatically in js/scenes.js -->
+          <div class="plate"></div>
+        </div>
+        <p class="cake-text" id="cakeText">Make a wish and blow — <span class="muted">or tap anywhere to continue</span></p>
+      </div>
+      <div class="dimmer" id="cakeDimmer"></div>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 6 — MEMORY LANE CAROUSEL (Swiper)
+         Photos: edit the PHOTOS array at the top of js/carousel.js
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-6" data-scene="6">
+      <h2 class="scene-title script">Memory Lane</h2>
+      <div class="swiper" id="memorySwiper">
+        <div class="swiper-wrapper" id="swiperWrapper"><!-- slides injected by js/carousel.js --></div>
+        <div class="swiper-pagination"></div>
+      </div>
+      <button class="btn pill continue-btn" id="carouselContinue">one last thing →</button>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 7 — THE LETTER
+         ★ HIGHLIGHTS: see HIGHLIGHTS config at top of js/letter.js ★
+         Every word is auto-wrapped:  <span class="w" data-i="12">word</span>
+         Highlighted words become:   <span class="w highlight" data-color="coral">word</span>
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-7" data-scene="7">
+      <div class="letter-panel" id="letterPanel">
+        <article class="letter" id="letterBody"><!-- rendered by js/letter.js --></article>
+      </div>
+      <button class="btn pill continue-btn" id="letterContinue">one more surprise →</button>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SCENE 8 — FINALE
+         ════════════════════════════════════════════════════════════ -->
+    <section class="scene" id="scene-8" data-scene="8">
+      <canvas id="fireworksCanvas"></canvas>
+      <div class="scene-center finale-center">
+        <h2 class="finale-title script">Happy Birthday<br /><span class="accent-pink">Sheetal</span></h2>
+        <button class="btn pill" id="replayBtn">↺ Replay</button>
+      </div>
+      <div class="bubble-layer" data-bubbles></div>
+    </section>
+
+  </main>
+
+  <script src="js/letter.js"></script>
+  <script src="js/scenes.js"></script>
+  <script src="js/bow.js"></script>
+  <script src="js/carousel.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

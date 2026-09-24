@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Finding Nemo palette — used as subtle accents, not literal
+   ═══════════════════════════════ ✦ ═══════════════════════════════
+   --ocean-950  deep sea floor   (backgrounds)
+   --ocean-700  open water       (cards / gradients)
+   --ocean-500  dory blue        (accents, borders)
+   --teal-400   reef teal        (accents, highlights)
+   --coral      clownfish orange (primary accents, buttons)
+   --pink / --blush / --rose     soft romantic pinks (hearts, flowers)
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --ocean-950: #03213f;
+  --ocean-800: #07406b;
+  --ocean-700: #0a5288;
+  --ocean-500: #2e86c1;
+  --ocean-300: #7fd0f0;
+  --teal-400: #35c4b5;
+  --coral: #ff7f2a;
+  --coral-soft: #ff9e57;
+  --pink: #ff5d8f;
+  --blush: #ffc2d1;
+  --rose: #e63965;
+  --sand: #ffe9c9;
+  --ink: #eaf6ff;
+  --muted: #9fc3dd;
+  --glass: rgba(9, 46, 78, 0.55);
+  --glass-border: rgba(127, 208, 240, 0.22);
+  --shadow: 0 18px 50px rgba(0, 10, 25, 0.45);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(53, 196, 181, 0.14), transparent 60%),
+    radial-gradient(900px 700px at 10% 110%, rgba(255, 93, 143, 0.10), transparent 55%),
+    linear-gradient(180deg, var(--ocean-950) 0%, var(--ocean-800) 55%, var(--ocean-950) 100%);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.script { font-family: 'Dancing Script', cursive; }
+.accent-orange { color: var(--coral-soft); }
+.accent-pink { color: var(--pink); }
+.muted { color: var(--muted); font-weight: 600; }
+.hidden { display: none !important; }
+
+/* ── Scene manager ─────────────────────────────────────────────── */
+#scenes { position: fixed; inset: 0; }
+.scene {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 18px;
+  visibility: hidden; opacity: 0; pointer-events: none;
+}
+.scene.is-active { visibility: visible; opacity: 1; pointer-events: auto; }
+
+/* Ocean-wipe transition overlay */
+#wipe {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none; visibility: hidden;
+}
+.wipe-wave {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--ocean-500), var(--teal-400) 55%, var(--ocean-700));
+}
+
+/* ── Ambient bubbles ───────────────────────────────────────────── */
+.bubble-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.bubble {
+  position: absolute; bottom: -40px; border-radius: 50%;
+  border: 1.5px solid rgba(127, 208, 240, 0.5);
+  background: radial-gradient(circle at 32% 30%, rgba(255,255,255,0.28), rgba(127,208,240,0.05) 65%);
+  animation: bubbleRise linear infinite;
+}
+@keyframes bubbleRise {
+  to { transform: translateY(-115vh) translateX(var(--drift, 20px)); }
+}
+
+/* ── Glass card + buttons ──────────────────────────────────────── */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+.btn.pill {
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.02rem;
+  color: #2b1200; background: linear-gradient(180deg, var(--coral-soft), var(--coral));
+  border: none; border-radius: 999px; padding: 14px 30px;
+  box-shadow: 0 10px 26px rgba(255, 127, 42, 0.38);
+  cursor: pointer; transition: transform .18s ease, box-shadow .18s ease;
+}
+.btn.pill:active { transform: scale(.95); }
+.continue-btn {
+  position: absolute; bottom: max(26px, env(safe-area-inset-bottom)); left: 50%;
+  transform: translateX(-50%); font-size: .95rem; padding: 11px 24px;
+}
+
+/* ══ SCENE 1 — flowers + lock ═══════════════════════════════════ */
+.flower-field { position: absolute; inset: 0; pointer-events: none; }
+.flower { position: absolute; top: -70px; left: 50%; will-change: transform; }
+.lock-card {
+  position: relative; z-index: 2; width: min(88vw, 340px);
+  padding: 30px 24px 24px; text-align: center;
+}
+.lock-emoji { font-size: 2.6rem; margin-bottom: 6px; }
+.lock-question { font-size: 1.35rem; font-weight: 800; margin-bottom: 16px; }
+.pin-input {
+  width: 100%; padding: 14px 16px; font-size: 1.5rem; font-weight: 800;
+  letter-spacing: .5em; text-indent: .5em; text-align: center;
+  color: var(--ink); background: rgba(3, 33, 63, .55);
+  border: 2px solid var(--ocean-500); border-radius: 14px; outline: none;
+  transition: border-color .2s ease;
+}
+.pin-input:focus { border-color: var(--teal-400); }
+.pin-input.shake { animation: shake .45s ease; border-color: var(--pink); }
+@keyframes shake {
+  20% { transform: translateX(-9px); } 40% { transform: translateX(9px); }
+  60% { transform: translateX(-6px); } 80% { transform: translateX(6px); }
+}
+.lock-hint { margin-top: 14px; font-size: .85rem; color: var(--muted); }
+
+/* ══ SCENE 2 — gift box ═════════════════════════════════════════ */
+.scene-center { display: flex; flex-direction: column; align-items: center; gap: 26px; position: relative; z-index: 2; }
+.gift-stage { position: relative; width: 190px; height: 190px; perspective: 700px; }
+.gift { position: absolute; inset: 0; }
+.gift-box {
+  position: absolute; left: 15px; right: 15px; bottom: 0; height: 118px;
+  background: linear-gradient(160deg, var(--teal-400), var(--ocean-500));
+  border-radius: 10px 10px 14px 14px; box-shadow: var(--shadow);
+}
+.gift-lid {
+  position: absolute; left: 4px; right: 4px; bottom: 112px; height: 40px;
+  background: linear-gradient(160deg, var(--coral-soft), var(--coral));
+  border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  transform-origin: 82% 100%; z-index: 3;
+}
+.ribbon-v { position: absolute; left: 50%; top: 0; bottom: 0; width: 22px; transform: translateX(-50%); background: var(--sand); opacity: .95; border-radius: 3px; }
+.gift-lid .ribbon-v { border-radius: 6px; }
+.ribbon-h { position: absolute; top: 0; bottom: 0; left: 50%; width: 22px; transform: translateX(-50%); background: var(--sand); opacity: .95; }
+.gift-glow {
+  position: absolute; left: 50%; bottom: 30px; width: 210px; height: 210px;
+  transform: translateX(-50%) scale(0); border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,226,150,.85), rgba(255,158,87,.35) 45%, transparent 70%);
+  z-index: 1;
+}
+.tap-hint { font-size: .9rem; color: var(--muted); min-height: 1.2em; }
+
+/* ══ SCENE 3 — bow canvas + reveal ══════════════════════════════ */
+#bowCanvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+.bow-instruction {
+  position: absolute; top: max(20px, env(safe-area-inset-top)); left: 50%;
+  transform: translateX(-50%); width: min(90vw, 460px); text-align: center;
+  font-size: .95rem; font-weight: 700; color: var(--ocean-300); z-index: 3;
+}
+.big-reveal {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  z-index: 5; pointer-events: none; visibility: hidden; opacity: 0;
+}
+.reveal-text { font-size: clamp(2.6rem, 9vw, 4.6rem); font-weight: 700; text-align: center; line-height: 1.15; }
+
+/* ══ SCENE 4 — tree ═════════════════════════════════════════════ */
+.tree-stage { position: relative; width: min(94vw, 520px); flex: 1 1 auto; display: flex; align-items: flex-end; justify-content: center; margin-top: 56px; }
+#treeSvg { width: 100%; max-height: 66vh; overflow: visible; }
+#treeTrunk path { stroke: #8a5a33; stroke-width: 14; }
+#treeTrunk .branch { stroke-width: 7.5; }
+.heart-leaf { transform-origin: center; transform-box: fill-box; }
+.ground {
+  position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+  width: 120%; height: 30px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(53,196,181,.28), transparent 68%);
+}
+.tree-text {
+  z-index: 2; width: min(92vw, 560px); text-align: center;
+  font-size: clamp(1.05rem, 4.2vw, 1.35rem); font-weight: 800; line-height: 1.55;
+  margin: 14px 0 64px; min-height: 4.4em;
+}
+.tree-text .word { display: inline-block; margin: 0 .14em; }
+
+/* ══ SCENE 5 — cake (reference style: pink tiers + white drip frosting) ══ */
+.cake-topline { font-size: 1.2rem; font-weight: 800; color: var(--blush); opacity: 0; margin-bottom: 2px; }
+.cake-stage { position: relative; width: 280px; height: 310px; }
+.cake-stage .plate {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 284px; height: 26px; border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff, #dbeaf5); box-shadow: var(--shadow);
+}
+.cake-tier { position: absolute; left: 50%; will-change: transform; }
+.cake-tier .side {
+  position: relative; border-radius: 10px 10px 12px 12px;
+  box-shadow: inset -16px -12px 24px rgba(205, 60, 110, .30), inset 14px 10px 20px rgba(255,255,255,.38), 0 10px 24px rgba(0,0,0,.30);
+}
+.cake-tier .stripes {
+  position: absolute; inset: 4px 8px; border-radius: 8px; opacity: .55;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,.65) 0 6px, rgba(255,150,180,.35) 6px 13px);
+}
+.cake-tier .frosting {
+  position: absolute; left: -5px; right: -5px; top: -17px; height: 26px;
+  background: linear-gradient(180deg, #fff, #f3f7fb); border-radius: 12px 12px 6px 6px;
+  box-shadow: 0 3px 7px rgba(0,0,0,.14); z-index: 2;
+}
+.cake-tier .drips { position: absolute; left: -5px; right: -5px; top: 6px; height: 36px; z-index: 2; }
+.cake-tier .drips span { position: absolute; top: 0; width: 9px; background: linear-gradient(180deg, #fff, #f3f7fb); border-radius: 0 0 6px 6px; }
+.cake-tier .sprinkle { position: absolute; width: 5px; height: 5px; border-radius: 50%; z-index: 3; }
+.candle-tall {
+  position: absolute; left: 50%; width: 11px; border-radius: 5px; z-index: 4;
+  background: linear-gradient(90deg, #ffe6ec, #ffffff 45%, #ffd6df);
+  box-shadow: 0 2px 6px rgba(0,0,0,.25); will-change: transform;
+}
+.candle-tall .wick { position: absolute; top: -7px; left: 50%; width: 2px; height: 8px; background: #5a4632; transform: translateX(-50%); }
+.candle-tall .flame {
+  position: absolute; top: -30px; left: 50%; width: 18px; height: 28px;
+  transform: translateX(-50%); border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(circle at 50% 72%, #fff9e3 12%, #ffd24a 45%, var(--coral) 82%);
+  filter: drop-shadow(0 0 14px rgba(255, 190, 70, .95));
+  transform-origin: 50% 100%;
+  animation: flicker .28s ease-in-out infinite alternate;
+}
+.candle-tall .flame-glow {
+  position: absolute; top: -58px; left: 50%; width: 90px; height: 90px;
+  transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,196,90,.5), rgba(255,150,60,.18) 45%, transparent 70%);
+  animation: glowPulse 1.6s ease-in-out infinite alternate;
+}
+@keyframes glowPulse { from { opacity: .8; transform: translateX(-50%) scale(.92); } to { opacity: 1; transform: translateX(-50%) scale(1.08); } }
+.candle-tall .smoke-wisp {
+  position: absolute; top: -30px; left: 50%; width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(210, 226, 238, .6); filter: blur(2px); opacity: 0; z-index: 5;
+}
+.sparkle { position: absolute; top: -14px; border-radius: 50%; background: #fff; opacity: .85; box-shadow: 0 0 8px rgba(255,255,255,.9); animation: sparkleFall linear infinite; }
+@keyframes sparkleFall { to { transform: translateY(330px) rotate(220deg); opacity: .1; } }
+.cake-text {
+  z-index: 3; text-align: center; min-height: 2.6em; max-width: 92vw;
+  font-family: 'Dancing Script', cursive; font-size: clamp(1.4rem, 5.4vw, 1.9rem);
+  font-weight: 700; color: #ffd76a; text-shadow: 0 0 18px rgba(255,190,80,.35);
+  opacity: 0;
+}
+.dimmer { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 4; }
+
+/* ══ SCENE 6 — carousel ═════════════════════════════════════════ */
+.scene-title { font-size: clamp(2rem, 7vw, 2.8rem); margin-bottom: 14px; color: var(--ocean-300); }
+#scene-6 { justify-content: flex-start; padding-top: max(30px, env(safe-area-inset-top)); }
+.swiper { width: min(88vw, 400px); height: min(64vh, 480px); }
+.swiper-slide { border-radius: 20px; overflow: hidden; }
+.memory-card {
+  width: 100%; height: 100%; position: relative;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 20px; overflow: hidden; box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+}
+.memory-card img { width: 100%; flex: 1 1 auto; min-height: 0; object-fit: cover; }
+.memory-caption {
+  padding: 12px 14px; font-size: .92rem; font-weight: 700; color: var(--blush);
+  background: rgba(3, 33, 63, .72); min-height: 42px; display: flex; align-items: center;
+}
+.swiper-pagination-bullet { background: var(--ocean-300); opacity: .4; }
+.swiper-pagination-bullet-active { background: var(--coral); opacity: 1; }
+
+/* ══ SCENE 7 — letter ═══════════════════════════════════════════ */
+#scene-7 { justify-content: flex-start; padding-top: max(22px, env(safe-area-inset-top)); }
+.letter-panel {
+  width: min(92vw, 620px); flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: 26px 22px 60px; margin-bottom: 78px;
+  background: linear-gradient(180deg, #fff7ef, #ffeede);
+  color: #5a3825; border-radius: 18px; box-shadow: var(--shadow);
+  -webkit-overflow-scrolling: touch;
+}
+/* Letter: clean, normal serif — swap font-family here if you prefer another */
+.letter { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1rem, 3.9vw, 1.13rem); line-height: 1.8; }
+.letter p { margin-bottom: 1.35em; }
+.letter p:last-child { margin-bottom: 0; }
+.letter .w { border-radius: 4px; transition: background-color .3s ease; }
+.letter .heading-line { font-size: 1.28em; font-weight: 700; color: var(--rose); }
+.letter .closing { font-size: 1.18em; font-weight: 700; color: var(--coral); }
+
+/* ★ HIGHLIGHT MECHANISM — colored sweep on the word's background  */
+.letter .w.highlight { position: relative; z-index: 1; padding: 0 .18em; margin: 0 -.18em; }
+.letter .w.highlight::before {
+  content: ''; position: absolute; inset: .1em -.18em; z-index: -1; border-radius: 6px;
+  background: var(--hl-color, rgba(255, 214, 102, .55));
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform .55s cubic-bezier(.25, .8, .3, 1);
+}
+.letter .w.highlight.lit::before { transform: scaleX(1); }
+
+/* ══ SCENE 8 — finale ═══════════════════════════════════════════ */
+#fireworksCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.finale-title { font-size: clamp(3rem, 11vw, 5.2rem); line-height: 1.12; text-align: center; font-weight: 700; }
+
+/* ── Small screens / landscape tweaks ─────────────────────────── */
+@media (max-height: 620px) {
+  .tree-stage { margin-top: 40px; }
+  #treeSvg { max-height: 52vh; }
+  .tree-text { margin-bottom: 56px; min-height: 3em; }
+  .letter-panel { margin-bottom: 64px; }
+}
